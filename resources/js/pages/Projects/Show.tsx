@@ -1,114 +1,136 @@
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { DialogClose } from "@radix-ui/react-dialog"
-import { ChevronLeftIcon } from "lucide-react"
+import { CheckCircle, ChevronLeftIcon, ClockAlert, User, XIcon } from "lucide-react"
+import { useContext } from "react"
+import { ActionContext } from "./ActionContext"
+import { formatDate } from "@/components/custom/FormProject"
+import { CompletedBadge, NotCompletedBadge } from "@/components/custom/BadgeProject"
 
 interface ShowProjectDialogProps {
     open: boolean;
-    onOpenChange: (status: boolean) => void
+    onOpenChange: (status: boolean) => void;
 }
 
-export const ShowProjectDialog = ({ open, onOpenChange }: ShowProjectDialogProps) => {
+export const ShowProjectDialog = ({ open, onOpenChange}: ShowProjectDialogProps) => {
+    const {projectSelected} = useContext(ActionContext)!
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className='mb-8 flex h-[calc(100vh-2rem)] min-w-[calc(100vw-2rem)] flex-col justify-between gap-0 p-0'>
+            <DialogContent className='mb-8 flex h-[calc(100vh-2rem)] lg:min-w-[calc(60vw-2rem)] flex-col justify-between gap-0 p-0'>
                 <ScrollArea className='flex flex-col justify-between overflow-hidden'>
                     <DialogHeader className='contents space-y-0 text-left'>
-                        <DialogTitle className='px-6 pt-6'>Product Information</DialogTitle>
+                        <DialogTitle className='px-6 pt-6'>Project Information</DialogTitle>
                         <DialogDescription asChild>
-                            <div className='p-6'>
+                            <div className='grid grid-cols-2 p-6 gap-6'>
+                                <div className="flex flex-col gap-6 ">
+                                    <div className="relative h-[30vh] rounded-lg overflow-hidden">
+                                        <img 
+                                            src="http://localhost:8000/storage/senja-cafe.jpeg"
+                                            alt="client photo"
+                                            className="absolute object-cover"
+                                            />
+                                        <div className="absolute top-0 right-0 p-4">
+                                            {
+                                                projectSelected?.is_completed? <CompletedBadge/> : <NotCompletedBadge deadline={projectSelected?.deadline ?? new Date()}/>
+                                            }
+                                        </div>
+                                    </div>
+                                    {
+                                        projectSelected?.tasks &&<CardTask tasks={projectSelected?.tasks}/>
+                                    }
+                                </div>
                                 <div className='[&_strong]:text-foreground space-y-4 [&_strong]:font-semibold'>
                                     <div className='space-y-1'>
-                                        <p>
-                                            <strong>Product Name:</strong> SuperTech 2000
+                                        <p className="text-md">
+                                            <strong>Project Title:</strong>
                                         </p>
                                         <p>
-                                            The SuperTech 2000 is a high-performance device designed for tech enthusiasts and professionals
-                                            alike, offering superior functionality and innovative features.
-                                        </p>
-                                    </div>
-                                    <div className='space-y-1'>
-                                        <p>
-                                            <strong>Specifications:</strong>
-                                        </p>
-                                        <ul>
-                                            <li>Processor: 3.6GHz Octa-Core</li>
-                                            <li>Memory: 16GB RAM</li>
-                                            <li>Storage: 1TB SSD</li>
-                                            <li>Display: 15.6&rdquo; 4K UHD</li>
-                                            <li>Battery Life: 12 hours</li>
-                                            <li>Weight: 2.1kg</li>
-                                        </ul>
-                                    </div>
-                                    <div className='space-y-1'>
-                                        <p>
-                                            <strong>Key Features:</strong>
-                                        </p>
-                                        <ul>
-                                            <li>Ultra-fast processing speed for intensive tasks</li>
-                                            <li>Long battery life, perfect for on-the-go professionals</li>
-                                            <li>Sleek and portable design</li>
-                                            <li>Advanced cooling system</li>
-                                            <li>Excellent build quality for durability</li>
-                                        </ul>
-                                    </div>
-                                    <div className='space-y-1'>
-                                        <p>
-                                            <strong>Price:</strong>
-                                        </p>
-                                        <p>$2,499.99 (Includes 1-year warranty)</p>
-                                    </div>
-                                    <div className='space-y-1'>
-                                        <p>
-                                            <strong>Customer Reviews:</strong>
-                                        </p>
-                                        <p>
-                                            &rdquo;Absolutely fantastic device! The performance is exceptional, and it handles all of my
-                                            design software without any lag.&rdquo; - John D.
-                                        </p>
-                                        <p>
-                                            &rdquo;Best purchase I&apos;ve made in years. The display quality is stunning, and the battery
-                                            lasts all day.&rdquo; - Sarah L.
-                                        </p>
-                                        <p>
-                                            &rdquo;The SuperTech 2000 is a game-changer in the tech industry. Worth every penny!&rdquo; - Emma
-                                            W.
+                                            {projectSelected?.title}
                                         </p>
                                     </div>
                                     <div className='space-y-1'>
-                                        <p>
-                                            <strong>Return Policy:</strong>
+                                        <p className="text-md">
+                                            <strong>Project Description:</strong>
                                         </p>
-                                        <p>
-                                            If you&apos;re not satisfied with your purchase, we offer a 30-day return policy. Return the
-                                            product within 30 days of purchase for a full refund.
-                                        </p>
+                                        <p>{projectSelected?.description}</p>
                                     </div>
                                     <div className='space-y-1'>
-                                        <p>
-                                            <strong>Warranty:</strong>
+                                        <p className="text-md">
+                                            <strong>Created At: </strong>
                                         </p>
-                                        <p>
-                                            Comes with a standard 1-year warranty covering defects in materials and workmanship. Extended
-                                            warranty plans are available.
+                                        <p>{formatDate(new Date(projectSelected?.createdAt!!))}</p>
+                                    </div>
+
+                                    <div className='space-y-1'>
+                                        <p className="text-md">
+                                            <strong>Deadline: </strong>
                                         </p>
+                                        <p>{formatDate(new Date(projectSelected?.deadline!!))}</p>
                                     </div>
                                 </div>
+                                
                             </div>
                         </DialogDescription>
                     </DialogHeader>
                 </ScrollArea>
                 <DialogFooter className='px-6 pb-6 sm:justify-end'>
-                    <DialogClose asChild>
-                        <Button variant='outline'>
-                            <ChevronLeftIcon />
-                            Back
-                        </Button>
-                    </DialogClose>
-                    <Button type='button'>Read More</Button>
+                    <Button variant='outline'>
+                        <ChevronLeftIcon />
+                        Close
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     )
 }
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Task } from "@/types/project"
+
+interface CardTaskProps {
+    tasks: Task[]
+}
+const CardTask = ({tasks}:CardTaskProps) => {
+  return (
+    <Card className='border-primary max-w-md gap-0 bg-transparent shadow-none'>
+      <CardHeader>
+        <CardTitle className="text-lg font-bold pb-2">List Task</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col gap-2">
+        {
+            tasks.map(task=>{
+                return (
+                    <div className="flex gap-4 items-start" key={task.id}>
+                        {
+                            task.is_completed ? 
+                            <CheckCircle className="text-green-400"/> : <XIcon className="text-red-500"/>
+                        }
+                        <div className="flex flex-col gap-0">
+                            {
+                                task.is_completed ? 
+                                <p className={`text-md text-green-500 font-bold`}>{task.title}</p> :
+                                 <p className={`text-md text-red-500 font-bold`}>{task.title}</p>
+                            }
+                            <div className="flex flex-row gap-4 items-center">
+                                <div className="border w-fit flex flex-row gap-1 items-center text-muted-foreground">
+                                    <ClockAlert size={14}/>
+                                    <p className="text-xs ">{formatDate(new Date(task.deadline))}</p>
+                                </div> 
+                                <div className="flex gap-1 items-center">
+                                    <User size={14}/>
+                                    <p className="text-xs font-bold">
+                                    {task.user.name}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                )
+            })
+        }
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+

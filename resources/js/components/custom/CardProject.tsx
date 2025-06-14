@@ -11,9 +11,10 @@ import { PenBox } from "lucide-react"
 interface CardProjectProps {
     project: Project,
     setOpenForm: (status: boolean) => void
+    setOpenProject: (status: boolean) => void
 }
 
-export default function CardProject({ project, setOpenForm }: CardProjectProps) {
+export default function CardProject({ project, setOpenForm, setOpenProject }: CardProjectProps) {
     const taskCompleted = project.tasks.filter(item => item.is_completed).length
 
     const { handleChangeAction, handleProjectSelected } = useContext(ActionContext)!
@@ -24,24 +25,33 @@ export default function CardProject({ project, setOpenForm }: CardProjectProps) 
         setOpenForm(true)
     }
 
+    const handleShowProject = (project: Project) => {
+        handleProjectSelected(project)
+        setOpenProject(true)
+    }
+
 
     return (
         <Card className="bg-primary-foreground p-0 pb-4">
             {/* body content */}
-            <CardContent className="p-0 relative">
+            <CardContent className="p-0 z-2 relative hover:cursor-pointer">
                 <img
                     src='http://localhost:8000/storage/senja-cafe.jpeg'
                     alt='Banner'
-                    className='aspect-video h-64 rounded-t-xl object-cover'
+                    className='aspect-video h-64 w-full rounded-t-xl object-cover'
                 />
 
-                <div className="absolute top-0 flex w-full justify-between p-4">
+                <div className="absolute top-1 flex w-full justify-between p-4 z-10">
                     <PenBox onClick={handleEditClick} className="hover:cursor-pointer" />
                     {
                         project.is_completed ? <CompletedBadge /> : <NotCompletedBadge deadline={project.deadline} />
                     }
                 </div>
-                <CardHeader className="absolute flex w-full bottom-0 h-32 bg-linear-to-b from-transparent to-primary-foreground to-35%">
+
+                <CardHeader 
+                  className="absolute z-1 flex w-full bottom-0 h-32 bg-linear-to-b from-transparent to-primary-foreground to-35%"
+                  onClick={()=>handleShowProject(project)}
+                >
                     {/* title project */}
                     <CardTitle className="flex flex-col gap-1">
                         <div className="flex justify-between items-center">
@@ -62,8 +72,6 @@ export default function CardProject({ project, setOpenForm }: CardProjectProps) 
             </CardContent>
             {/* footer */}
             <CardFooter className="grid grid-cols-2 items-center gap-4">
-                {/** progress section */}
-                <Progress value={100} className="col-span-2" />
                 {/* avatars */}
                 <TeamsAvatar />
                 {/** task detail */}

@@ -18,6 +18,10 @@ class Task extends Model
         'project_id',
     ];
 
+    protected $casts = [
+
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

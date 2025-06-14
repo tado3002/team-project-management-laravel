@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Models\Project;
-use Illuminate\Auth\Events\Validated;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -16,7 +14,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::with('tasks')->get();
+        $projects = Project::with('tasks.user')->get();
         return Inertia::render('Projects/Index', [
             'projects' => $projects,
             'flash' => [

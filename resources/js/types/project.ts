@@ -8,13 +8,19 @@ export interface Project {
     updatedAt: Date,
     tasks: Task[],
 }
-interface Task {
+export interface Task {
     id: number,
     title: string,
     description: string,
     is_completed: boolean,
     deadline: Date
-    user_id: number,
     createdAt: Date,
     updatedAt: Date
+    user: User,
+}
+
+export interface User {
+    id: number
+    name: string
+    email:string
 }

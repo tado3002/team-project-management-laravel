@@ -30,6 +30,7 @@ export default function Page({ projects, flash }: Props) {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastType, setToastType] = useState<'success' | 'error'>('success');
+
     useEffect(() => {
         if (flash?.success) {
             setToastMessage(flash.success);
@@ -73,10 +74,8 @@ export default function Page({ projects, flash }: Props) {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center p-4">
                     {projects.map(project => (
-                        <div key={project.id}
-                            onClick={() => setOpenProject(true)}
-                        >
-                            <CardProject project={project} setOpenForm={setOpenForm} />
+                        <div key={project.id}>
+                            <CardProject project={project} setOpenForm={setOpenForm} setOpenProject={setOpenProject} />
                         </div>
                     ))}
                 </div>

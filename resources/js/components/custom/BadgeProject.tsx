@@ -1,6 +1,6 @@
 import { Badge } from "../ui/badge"
 
-function countdownDay(date: Date): string {
+export function countdownDay(date: Date): string {
     const now = new Date()
     const delta = date.getTime() - now.getTime()
     const daysLeft = Math.ceil(delta / (1000 * 60 * 60 * 24));

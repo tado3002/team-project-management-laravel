@@ -15,14 +15,14 @@ interface FormProjectProps {
     openForm: boolean,
     setOpenForm: (status: boolean) => void
 }
-function formatDate(date: Date | undefined) {
+export function formatDate(date: Date | undefined) {
     if (!date) {
         return ""
     }
     return date.toLocaleDateString("id-ID", {
         day: "2-digit",
-        month: "long",
-        year: "numeric",
+        month: "2-digit",
+        year: "2-digit",
     })
 }
 function isValidDate(date: Date | undefined) {
