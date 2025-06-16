@@ -44,6 +44,9 @@ export default function FormProject({ openForm, setOpenForm }: FormProjectProps)
         is_completed: false,
         deadline: new Date()
     })
+
+    console.log(data)
+
     // date picker controller
     const [open, setOpen] = React.useState(false)
     const [deadline, setDeadline] = React.useState<Date | undefined>(
@@ -86,6 +89,7 @@ export default function FormProject({ openForm, setOpenForm }: FormProjectProps)
         } else {
             put(`/projects/${projectSelected!.id}`, {
                 onSuccess: () => {
+                    setData('deadline', new Date(data.deadline))
                     setOpenForm(false)
                     reset()
                     toast('Project success updated!')

@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Project;
 use App\Models\Task;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class TaskSeeder extends Seeder
@@ -13,6 +14,16 @@ class TaskSeeder extends Seeder
      */
     public function run(): void
     {
-        Task::factory()->createOne();
+        $users = User::all();
+        $projects = Project::all(['id']);
+        foreach ($users as $user) {
+            Task::factory(5)->create([
+                'title' => fake()->text(10),
+                'description' => fake()->text(30),
+                'is_completed' => fake()->boolean(),
+                'user_id' => $user->id,
+                'project_id' => fake()->randomElement($projects),
+            ]);
+        }
     }
 }
